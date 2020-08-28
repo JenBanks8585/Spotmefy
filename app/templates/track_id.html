@@ -1,0 +1,34 @@
+  
+<!-- app/templates/track_id.html -->
+
+{% extends "bootstrap_layout.html" %}
+{% set active_page = "track_id" %}
+
+{% block content %}
+
+<div class = "container">
+
+    <div class = "jumbotron" style = "background-color: lightblue">
+
+        <h2>Please enter a track_id </h2>
+        <h3>It should be in text format as shown below</h3>
+        <p>'7izsUQjOYXVWkmFvEpTakb'</p>
+
+    </div>
+
+</div>
+
+<div class = " ">
+
+    <form action="{{url_for('appli.recommend')}}", method="POST">
+        <p>Track ID:</p>
+        <input type="text"  name='trackquery'>
+        <button type="submit"  class = "btn btn-primary">Recommend</button>
+    </form>
+
+
+</div>
+
+{% endblock %}
+
+

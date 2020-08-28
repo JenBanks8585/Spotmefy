@@ -1,0 +1,22 @@
+<!-- app/templates/track_results.html -->
+
+{% extends "bootstrap_layout.html" %}
+{% set active_page = "track_results" %}
+
+{% block content %}
+
+<div class = "container">
+
+    <div class = "jumbotron" style = "background-color: lightblue">
+
+        <h2>Here are the recommendations</h2>
+        <h3>{% {results} %}</h3>
+        
+    
+
+    </div>
+
+
+</div>
+
+{% endblock %}

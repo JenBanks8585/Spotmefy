@@ -9,8 +9,11 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.neighbors import NearestNeighbors
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from flask import Blueprint, request, jsonify, render_template, Flask
-from flask_cors import CORS, cross_origin
+from flask import Blueprint, request, jsonify, render_template, Flask, redirect, url_for
+#from flask_cors import CORS, cross_origin
+
+model = Blueprint("model", __name__)
+
 
 class My_encoder(BaseEstimator, TransformerMixin):
    
@@ -38,3 +41,27 @@ class My_encoder(BaseEstimator, TransformerMixin):
         data_encoded = pd.DataFrame(self.encoder.transform(data_to_encode),columns = self.columns)
         
         return pd.concat([data_left,data_encoded],axis = 1)
+
+
+df=pd.read_csv('https://raw.githubusercontent.com/Build-Week-Spotify-Song-Suggester-5/Data-Science/master/app/most_popular_spotify_songs.csv')
+df['song_id']= np.arange(0, len(df))
+
+features_to_encode = ['time_signature', 'mode', 'key', 'genre']             # features to encode
+enc= My_encoder()                                                           # Instantiate encoder
+enc.fit(df,features_to_encode)                                              # fit encoder
+df_encoded = enc.transform(df)                                              # transform
+features = df_encoded.columns.to_list()[4:]                                 # column names of numeric features
+X = df_encoded[features].values                                             # numeric values
+X_df = pd.DataFrame(X, columns = features )                                 # encoded df of selected features
+  
+neigh = NearestNeighbors(n_neighbors= 6)                                    # Instantiate NN
+neigh.fit(X_df[features].values)                                            # fit 
+
+# Pickling of files:
+
+pickle.dump(neigh, open('neigh.pkl', 'wb'))
+
+pickle.dump(X_df, open('X_df.pkl', 'wb'))
+
+pickle.dump(df, open('df.pkl', 'wb'))
+
